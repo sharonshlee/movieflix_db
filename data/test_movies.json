@@ -1,0 +1,1 @@
+[{"user_id": 1, "name": "Test_user", "movies": [{"movie_id": 1, "name": "Titanic", "director": "James Cameron", "year": 1997, "rating": 7.9, "poster": "https://m.media-amazon.com/images/M/MV5BMDdmZGU3NDQtY2E5My00ZTliLWIzOTUtMTY4ZGI1YjdiNjk3XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg", "website": "https://www.imdb.com/title/tt0120338"}]}]

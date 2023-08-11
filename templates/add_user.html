@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add User - Movieflix</title>
+    <link rel="icon" href="/static/images/logo.png" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!--Google fonts    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="movie">
+        <header>
+            <h1><img src="/static/images/logo.png" alt="logo"></h1>
+            <h1>Movieflix</h1>
+            <a href="/">Home</a> |
+            <a href="/users">Users</a>
+            <br>
+            <br>
+        </header>
+        <main>
+            <h3>Add User</h3>
+            <form action="{{ url_for('users.add_user') }}" method="POST">
+                <table>
+                    <tr>
+                        <td><label for="user_name">User Name:</label></td>
+                        <td><input type="text" name="user_name" id="user_name"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" name="submit_button" value="Add User"></td>
+                    </tr>
+                </table>
+            </form>
+        </main>
+        <footer class="error">
+            <br>
+            {% if error_messages %}
+                {% for error in error_messages %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        </footer>
+    </div>
+</body>
+</html>

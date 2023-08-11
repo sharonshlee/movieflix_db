@@ -1,0 +1,115 @@
+"""
+Users class
+Managing Users' CRUD operations
+"""
+from typing import List
+
+from movieflix_db.data_manager.data_manager_interface import DataManagerInterface
+from movieflix_db.data_manager.data_models import User
+
+
+class Users:
+    """
+    Users class
+    Implementing Users' CRUD operations
+    """
+
+    def __init__(self, data_manager: DataManagerInterface):
+        self._data_manager = data_manager
+
+    @staticmethod
+    def __user_to_dict(user) -> dict:
+        """
+        Convert user from db object to dict format
+        """
+        movies = []
+        for movie in user.movies:
+            movies.append(
+                {
+                    "id": movie.id,
+                    "name": movie.movie_name,
+                    "director": movie.director,
+                    "year": movie.year,
+                    "rating": movie.rating,
+                    "poster": movie.poster,
+                    "website": movie.website
+                }
+            )
+        return {"id": user.id,
+                "name": user.user_name,
+                "movies": movies}
+
+    def get_all_users(self) -> List[dict] | None:
+        """
+        Return a list of all users
+        :return:
+            A list of dictionaries representing users
+        """
+        users_query = self._data_manager.get_all_data()
+        users = []
+        for user in users_query:
+            users.append(self.__user_to_dict(user))
+        return users
+
+    def get_user(self, user_id: int) -> dict | None:
+        """
+        Return a specific user given user_id
+        :param user_id: int
+        :return:
+            User (dict) |
+            None
+        """
+        user = self._data_manager.get_item_by_id(user_id)
+        return self.__user_to_dict(user)
+
+    @staticmethod
+    def __validate_user_data(new_user: dict) -> bool:
+        #  __ enforce stricter access control
+        # accessible to internal class only
+        """
+        Check if  the new user data is valid
+        :param
+            new_user: (dict)
+        :return:
+            True if 'name' and 'movies' fields are present
+        """
+        return 'user_name' in new_user and 'movies' in new_user
+
+    @staticmethod
+    def __instantiate_new_user(name):
+        return User(
+            user_name=name
+        )
+
+    def add_user(self, new_user: dict) -> bool | None:
+        """
+        Add new user to json file
+        :param new_user: (dict)
+        :return:
+            Successfully add user, True (bool)
+            Invalid new user data, None
+        """
+        if self.__validate_user_data(new_user):
+            return self._data_manager.\
+                    add_item(self.__instantiate_new_user(new_user['user_name']))
+        return None
+
+    def update_user(self, updated_user: dict):
+        """
+        Update a user info
+        :param updated_user: dict
+        :return:
+            True for success update user (bool) |
+            None
+        """
+        return self._data_manager.update_item(updated_user)
+
+    def delete_user(self, user_id: int) -> bool | None:
+        """
+        Delete a user
+        :param user_id: int
+        :return:
+            True for success delete user (bool) |
+            None
+        """
+        return self._data_manager.delete_item(user_id)

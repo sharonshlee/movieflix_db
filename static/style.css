@@ -1,0 +1,102 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #F5F5F5;
+    padding: 20px;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #4F4F4F;
+    letter-spacing: 1em;
+    font-family: 'Orbitron', sans-serif;
+}
+
+h1 img {
+    width: 200px;
+    height: 200px;
+}
+
+.movie {
+    background-color: #FFF;
+    border: 1px solid #DDD;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+
+.movie h2 {
+    text-align: center;
+    margin-top: 0;
+    color: gray;
+}
+
+.movie h3 {
+    color: gray;
+}
+
+.movie p {
+    margin: 10px 0;
+}
+
+.movie1 {
+    width: 140px;
+}
+
+.list-movies-title {
+  padding: 10px 0;
+  color: white;
+  text-align: center;
+  font-size: 16pt;
+}
+
+.movie-grid {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.movie-grid li {
+  padding: 10px 15px;
+  text-align: left;
+}
+
+
+.movie-title,
+.movie-year {
+  font-size: 0.8em;
+  text-align: center;
+}
+
+.movie-title {
+  margin-top: 10px;
+}
+
+
+.movie-year {
+  color: #999;
+}
+
+
+.movie-poster {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    width: 128px;
+    height: 193px;
+}
+
+.movie-flag {
+    width: 20px;
+    height: 15px;
+}
+
+.error,
+.error p,
+.error h2{
+    color: red;
+}

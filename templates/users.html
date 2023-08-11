@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users - Movieflix</title>
+    <link rel="icon" href="/static/images/logo.png" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!--Google fonts    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="movie">
+    <header>
+      <h1><img src="/static/images/logo.png" alt="logo"></h1>
+      <h1>Movieflix</h1>
+      <h2>Users</h2>
+      <a href="/">Home</a> |
+      <a href="/add_user">Add User</a>
+      <br>
+      <br>
+    </header>
+    <main>
+        {% if users %}
+          <ol class="movie-grid">
+          {% for user in users %}
+            <li>
+              <a href="/users/{{ user.id }}">{{ user.name }}</a>
+                <div class="movie-title">
+                    <a href="/users/{{ user.id }}/update_user">Update</a>
+                    |
+                    <a href="/users/{{ user.id }}/delete_user">Delete</a>
+                </div>
+            </li>
+          {% endfor %}
+          </ol>
+        {% else %}
+            <div class="error">
+                <p>There are no user yet, add one.</p>
+            </div>
+        {% endif %}
+    </main>
+  </div>
+</body>
+</html>
