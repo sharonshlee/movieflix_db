@@ -3,13 +3,10 @@ SQLiteDataManager class implemented DataManagerInterface
 for managing data from sqlite database
 """
 from abc import ABC
-from typing import List
 
-from flask_sqlalchemy.query import Query
 from sqlalchemy.exc import SQLAlchemyError
 
-from movieflix_db.data_manager.data_manager_interface import DataManagerInterface
-from movieflix_db.data_manager.data_models import User, Movie
+from .data_manager_interface import DataManagerInterface
 
 
 class SQLiteDataManager(DataManagerInterface, ABC):
@@ -23,7 +20,7 @@ class SQLiteDataManager(DataManagerInterface, ABC):
         self._id_key = id_key
         self._entity = entity
 
-    def get_all_data(self) -> Query | None:
+    def get_all_data(self):
         """
         Return all data from sqlite DB
         :return:
@@ -68,18 +65,6 @@ class SQLiteDataManager(DataManagerInterface, ABC):
             self.db.session.rollback()
             return None
 
-    def generate_new_id(self, items: list, key=None) -> int:
-        """
-        Return 1 if items is empty
-        otherwise, return the highest id_key plus 1
-        :param items: list
-        :param key: str
-        :return:
-            new item id (int) |
-            1 if items is empty (int)
-        """
-        pass
-
     def update_item(self, updated_item: dict) -> bool | None:
         """
         Update item with updated_item
@@ -90,16 +75,14 @@ class SQLiteDataManager(DataManagerInterface, ABC):
         """
         try:
             item = self._entity.query.get(updated_item['id'])
-            if item:
-                for key, value in updated_item.items():
-                    # skip id
-                    if key == 'id':
-                        continue
-                    setattr(item, key, value)
-                self.db.session.commit()
-                return True
-        except SQLAlchemyError as err:
-            print(err)
+            for key, value in updated_item.items():
+                # skip id
+                if key == 'id':
+                    continue
+                setattr(item, key, value)
+            self.db.session.commit()
+            return True
+        except SQLAlchemyError:
             self.db.session.rollback()
             return None
 

@@ -4,8 +4,8 @@ Managing Users' CRUD operations
 """
 from typing import List
 
-from movieflix_db.data_manager.data_manager_interface import DataManagerInterface
-from movieflix_db.data_manager.data_models import User, UserMovie
+from .data_manager_interface import DataManagerInterface
+from .data_models import User
 
 
 class Users:
@@ -117,21 +117,3 @@ class Users:
             None
         """
         return self._data_manager.delete_item(user_id)
-
-
-    # @staticmethod
-    # def __instantiate_user_movie(fav_movie_info):
-    #     return UserMovie(
-    #         user_id=fav_movie_info['user_id'],
-    #         movie_id=fav_movie_info['movie_id']
-    #     )
-
-    # def add_user_movie(self, fav_movie_info: dict) -> bool | None:
-    #     """
-    #     Add a movie to a user
-    #     :param fav_movie_info: dict
-    #     :return:
-    #         True for success add (bool) |
-    #         None
-    #     """
-    #     return self._data_manager.add_item(self.__instantiate_user_movie(fav_movie_info))

@@ -9,20 +9,23 @@ import os
 from flask import Flask, render_template, g
 from flask_cors import CORS
 
-from movieflix_db.data_manager.data_models import User, Movie, UserMovie, MovieReview, db
-from movieflix_db.data_manager.users import Users
-from movieflix_db.data_manager.movies import Movies
-from movieflix_db.data_manager.users_movies import UsersMovies
-from movieflix_db.data_manager.movies_reviews import MoviesReviews
-from movieflix_db.data_manager.sqlite_data_manager import SQLiteDataManager
 from users_routes import users_bp
 from movies_routes import movies_bp
+from api import api
+
+from data_manager.data_models import User, Movie, UserMovie, MovieReview, db
+from data_manager.users import Users
+from data_manager.movies import Movies
+from data_manager.users_movies import UsersMovies
+from data_manager.movies_reviews import MoviesReviews
+from data_manager.sqlite_data_manager import SQLiteDataManager
 
 app = Flask(__name__)
 app.app_context()
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data/movieflix.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
+                                        os.path.join(basedir, 'data/movieflix.sqlite')
 
 db.init_app(app)
 with app.app_context():
@@ -35,12 +38,18 @@ movies_reviews_data_manager = MoviesReviews(SQLiteDataManager('id', MovieReview,
 
 app.register_blueprint(users_bp)
 app.register_blueprint(movies_bp)
+app.register_blueprint(api, url_prefix='/api')
+
 
 CORS(app)
 
 
 @app.before_request
 def before_request():
+    """
+    Creating data managers for global uses
+    before each request
+    """
     g.users_data_manager = users_data_manager
     g.movies_data_manager = movies_data_manager
     g.users_movies_data_manager = users_movies_data_manager

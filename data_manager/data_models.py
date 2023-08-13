@@ -1,14 +1,26 @@
+"""
+Data models for entities:
+User
+Movie
+UserMovie
+MovieReview
+"""
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 
 class User(db.Model):
+    """
+    User Class
+    """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_name = db.Column(db.String)
     movies = db.relationship('UserMovie', back_populates='user', cascade='all, delete-orphan')
-    movie_reviews = db.relationship('MovieReview', back_populates='user', cascade='all, delete-orphan')  # New relationship
+    movie_reviews = db.relationship('MovieReview',
+                                    back_populates='user',
+                                    cascade='all, delete-orphan')
 
     def __repr__(self) -> str:
         return f"User(id={self.id}, user_name={self.user_name})"
@@ -20,6 +32,9 @@ class User(db.Model):
 
 
 class Movie(db.Model):
+    """
+    Movie Class
+    """
     __tablename__ = 'movies'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     movie_name = db.Column(db.String(50), unique=True)
@@ -46,6 +61,9 @@ class Movie(db.Model):
 
 
 class UserMovie(db.Model):
+    """
+    UserMovie Class
+    """
     __tablename__ = "users_movies"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

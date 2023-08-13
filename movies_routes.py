@@ -19,6 +19,9 @@ IMDB_BASE_URL = 'https://www.imdb.com/title/'
 
 @movies_bp.route('/movies', methods=['GET'])
 def get_movies():
+    """
+    Get all the movies from the movies table
+    """
     movies = g.movies_data_manager.get_movies()
     return render_template('movies.html', movies=movies)
 
@@ -158,7 +161,8 @@ def add_new_movie():
 
         if g.movies_data_manager.add_new_movie(new_movie_info) is None:
             return render_template('add_new_movie.html',
-                                   error_messages=['Cannot add movie. Movie already exist in the database.'])
+                                   error_messages=['Cannot add movie. '
+                                                   'Movie already exist in the database.'])
 
         return redirect(url_for('movies.get_movies'))
 
@@ -309,25 +313,38 @@ def delete_movie(movie_id: int):
 
 @movies_bp.route('/users/<int:user_id>/movie_reviews/<int:movie_id>', methods=['GET'])
 def get_movie_reviews(user_id: int, movie_id: int):
+    """
+    Get all the movie's reviews from movie_reviews table
+    :param user_id: int
+    :param movie_id: int
+    """
     user = g.users_data_manager.get_user(user_id)
     if user is None:
         abort(404)
 
     movie = g.movies_data_manager.get_movie(movie_id)
     movie_reviews = g.movies_reviews_data_manager.get_movie_reviews()
-    return render_template('movie_reviews.html', user=user, movie_reviews=movie_reviews, movie=movie)
+    return render_template('movie_reviews.html',
+                           user=user,
+                           movie_reviews=movie_reviews,
+                           movie=movie)
 
 
 @movies_bp.route('/users/<int:user_id>/add_movie_review/<int:movie_id>', methods=['POST'])
 def add_movie_review(user_id: int, movie_id: int):
-    if request.method == 'POST':
-        reviewed_info = {
-            'user_id': user_id,
-            'movie_id': movie_id,
-            'rating': request.form.get('rating'),
-            'review_text': request.form.get('review_text')
-        }
+    """
+    Add a movie review by a user
+    given user_id and movie_id
+    :param user_id: int
+    :param movie_id: int
+    """
+    reviewed_info = {
+        'user_id': user_id,
+        'movie_id': movie_id,
+        'rating': request.form.get('rating'),
+        'review_text': request.form.get('review_text')
+    }
 
-        if g.movies_reviews_data_manager.add_movie_review(reviewed_info) is None:
-            abort(404, ['Cannot review this movie.'])
-        return redirect(url_for('movies.get_movie_reviews', movie_id=movie_id, user_id=user_id))
+    if g.movies_reviews_data_manager.add_movie_review(reviewed_info) is None:
+        abort(404, ['Cannot review this movie.'])
+    return redirect(url_for('movies.get_movie_reviews', movie_id=movie_id, user_id=user_id))

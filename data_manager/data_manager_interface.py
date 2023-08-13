@@ -3,7 +3,6 @@ DataManagerInterface:
 Data management for file like json, csv or db sources.
 """
 from abc import ABC, abstractmethod
-from flask_sqlalchemy.query import Query
 
 
 class DataManagerInterface(ABC):
@@ -17,7 +16,7 @@ class DataManagerInterface(ABC):
     """
 
     @abstractmethod
-    def get_all_data(self) -> Query | None:
+    def get_all_data(self):
         """
         Return all the data from db
         :return:
@@ -41,18 +40,6 @@ class DataManagerInterface(ABC):
         :param new_item: (dict)
         :return:
             Successfully add item, True (bool)
-        """
-
-    @abstractmethod
-    def generate_new_id(self, items: list, key=None) -> int:
-        """
-        Return 1 if items is empty
-        otherwise, return the highest id_key plus 1
-        :param items: list
-        :param key: str
-        :return:
-            new item id (int) |
-            1 if items is empty (int)
         """
 
     @abstractmethod

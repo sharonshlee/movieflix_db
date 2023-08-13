@@ -4,8 +4,8 @@ Managing Movies' CRUD operations
 """
 from typing import List
 
-from movieflix_db.data_manager.data_manager_interface import DataManagerInterface
-from movieflix_db.data_manager.data_models import Movie, UserMovie
+from .data_manager_interface import DataManagerInterface
+from .data_models import Movie
 
 
 class Movies:
