@@ -27,23 +27,23 @@ def list_users():
 @users_bp.route('/users/<int:user_id>', methods=['GET'])
 def get_user_movies(user_id: int):
     """
-    Get user given user id
+    Get user movies given user id
     :param
         user_id: int
     :return:
         Render to user_movies.html
-            with user info
+            with user info and
+            movies that are not favourited
         User not found error message
     """
     user = g.users_data_manager.get_user(user_id)
 
     movies = g.movies_data_manager.get_movies()
     un_favourite_movies = []
-    ids = []
-    for user_movie in user['movies']:
-        ids.append(user_movie['id'])
+
     for movie in movies:
-        if movie['id'] not in ids:
+        if movie['id'] not in \
+                [user_movie['id'] for user_movie in user['movies']]:
             un_favourite_movies.append(movie)
 
     if user is None:
@@ -177,7 +177,7 @@ def delete_user(user_id: int):
 @users_bp.route('/users/<int:user_id>/add_user_movie/<int:movie_id>')
 def add_user_movie(user_id: int, movie_id: int):
     """
-    Add a specific user's fav movie
+    Add a favourite movie to a user
     given user_id and movie id
     :param user_id: int
     :param movie_id: int
@@ -198,8 +198,8 @@ def add_user_movie(user_id: int, movie_id: int):
 @users_bp.route('/users/<int:user_id>/delete_user_movie/<int:user_movie_id>')
 def delete_user_movie(user_id: int, user_movie_id: int):
     """
-    Delete a specific user's fav movie
-    given user_id and movie id
+    Delete a fav movie for a user
+    given user_id and user_movie_id
     :param user_movie_id: int
     :param user_id: int
     :return:
