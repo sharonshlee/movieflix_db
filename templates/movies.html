@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Movies - Movieflix</title>
+    <link rel="icon" href="/static/images/logo.png" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!--Google fonts    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="movie">
+    <header>
+        <h1><img src="/static/images/logo.png" alt="logo"></h1>
+        <h1>Movieflix</h1>
+        <h2>All Movies</h2>
+        <a href="/">Home</a> |
+        <a href="/users">Users</a> |
+        <a href="/movies/add_movie">Add Movie</a>
+        <br>
+        <br>
+        {% if error_message %}
+            <p class="error_movie">{{ error_message }}</p>
+        {% endif %}
+    </header>
+    <main>
+      <ol class="movie-grid">
+      {% if movies %}
+          {% for movie in movies %}
+            <li>
+                <div class="movie1">
+                    <a href="{{ movie.website }}">
+                        <img class="movie-poster" src="{{ movie.poster }}" title="{{ movie.movie_name }}"/>
+                    </a>
+                    <div class="movie-title">{{ movie.movie_name }}</div>
+                    <div class="movie-year">{{ movie.director }}</div>
+                    <div class="movie-year">{{ movie.year }}</div>
+                    <div class="movie-year">{{ movie.rating }}</div>
+                      <div class="movie-title">
+                          <a href="/movies/update_movie/{{ movie.id }}">Update</a>
+                          |
+                          <a href="/movies/delete_movie/{{ movie.id }}">Delete</a>
+                      </div>
+                </div>
+            </li>
+          {% endfor %}
+      {% endif %}
+      </ol>
+    </main>
+  </div>
+</body>
+</html>

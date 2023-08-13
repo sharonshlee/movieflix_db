@@ -32,7 +32,8 @@ h1 img {
     color: gray;
 }
 
-.movie h3 {
+.movie h3,
+td {
     color: gray;
 }
 
@@ -42,6 +43,21 @@ h1 img {
 
 .movie1 {
     width: 140px;
+}
+
+.review {
+    width: 600px;
+    text-align: left;
+    font-size: 0.8em;
+    margin-top: 10px;
+    color: gray;
+    box-sizing: border-box;
+    border: 1px solid gray;
+    padding: 1rem;
+}
+
+.textarea {
+    text-align: justify;
 }
 
 .list-movies-title {
@@ -99,4 +115,10 @@ h1 img {
 .error p,
 .error h2{
     color: red;
+}
+
+.error_movie {
+    color: red;
+    text-align: center;
+
 }

@@ -5,7 +5,7 @@ Managing Users' CRUD operations
 from typing import List
 
 from movieflix_db.data_manager.data_manager_interface import DataManagerInterface
-from movieflix_db.data_manager.data_models import User
+from movieflix_db.data_manager.data_models import User, UserMovie
 
 
 class Users:
@@ -23,20 +23,21 @@ class Users:
         Convert user from db object to dict format
         """
         movies = []
-        for movie in user.movies:
+        for user_movie in user.movies:
             movies.append(
                 {
-                    "id": movie.id,
-                    "name": movie.movie_name,
-                    "director": movie.director,
-                    "year": movie.year,
-                    "rating": movie.rating,
-                    "poster": movie.poster,
-                    "website": movie.website
+                    "user_movie_id": user_movie.id,
+                    "id": user_movie.movie.id,
+                    "movie_name": user_movie.movie.movie_name,
+                    "director": user_movie.movie.director,
+                    "year": user_movie.movie.year,
+                    "rating": user_movie.movie.rating,
+                    "poster": user_movie.movie.poster,
+                    "website": user_movie.movie.website
                 }
             )
         return {"id": user.id,
-                "name": user.user_name,
+                "user_name": user.user_name,
                 "movies": movies}
 
     def get_all_users(self) -> List[dict] | None:
@@ -46,6 +47,9 @@ class Users:
             A list of dictionaries representing users
         """
         users_query = self._data_manager.get_all_data()
+        if users_query is None:
+            return None
+
         users = []
         for user in users_query:
             users.append(self.__user_to_dict(user))
@@ -113,3 +117,21 @@ class Users:
             None
         """
         return self._data_manager.delete_item(user_id)
+
+
+    # @staticmethod
+    # def __instantiate_user_movie(fav_movie_info):
+    #     return UserMovie(
+    #         user_id=fav_movie_info['user_id'],
+    #         movie_id=fav_movie_info['movie_id']
+    #     )
+
+    # def add_user_movie(self, fav_movie_info: dict) -> bool | None:
+    #     """
+    #     Add a movie to a user
+    #     :param fav_movie_info: dict
+    #     :return:
+    #         True for success add (bool) |
+    #         None
+    #     """
+    #     return self._data_manager.add_item(self.__instantiate_user_movie(fav_movie_info))

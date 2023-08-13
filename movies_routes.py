@@ -12,9 +12,15 @@ from flask import Blueprint, render_template, request, redirect, url_for, abort,
 
 movies_bp = Blueprint('movies', __name__)
 
-API_KEY = 'YourAPIKey'
+API_KEY = 'YourApiKey'
 BASE_URL_KEY = f'http://www.omdbapi.com/?apikey={API_KEY}'
 IMDB_BASE_URL = 'https://www.imdb.com/title/'
+
+
+@movies_bp.route('/movies', methods=['GET'])
+def get_movies():
+    movies = g.movies_data_manager.get_movies()
+    return render_template('movies.html', movies=movies)
 
 
 def fetch_movie_api_response(title: str) -> dict:
@@ -132,8 +138,35 @@ def get_new_movie_info() -> dict | list:
         return get_empty_info(movie_name)
 
 
+@movies_bp.route('/movies/add_movie', methods=['GET', 'POST'])
+def add_new_movie():
+    """
+    Render add_new_movie form to add movie
+    Redirect to movies page
+    after adding a new movie
+    :return:
+        GET: render add_movie page
+        POST:
+            redirect to user_movies page |
+            user not found error message
+    """
+    if request.method == 'POST':
+        new_movie_info = get_new_movie_info()
+        if isinstance(new_movie_info, list):
+            return render_template('add_new_movie.html',
+                                   error_messages=new_movie_info)
+
+        if g.movies_data_manager.add_new_movie(new_movie_info) is None:
+            return render_template('add_new_movie.html',
+                                   error_messages=['Cannot add movie. Movie already exist in the database.'])
+
+        return redirect(url_for('movies.get_movies'))
+
+    return render_template('add_new_movie.html')
+
+
 @movies_bp.route('/users/<int:user_id>/add_movie', methods=['GET', 'POST'])
-def add_movie(user_id: int):
+def add_user_movie(user_id: int):
     """
     Render add_movie form to add movie
     for a given user id
@@ -160,8 +193,7 @@ def add_movie(user_id: int):
         if g.movies_data_manager.add_user_movie(user_id, new_movie_info) is None:
             return render_template('add_movie.html',
                                    user=user,
-                                   error_messages=[f'Cannot add this movie as it belongs to other '
-                                                   'user.'])
+                                   error_messages=[])
 
         return redirect(url_for('users.get_user', user_id=user_id))
 
@@ -226,52 +258,76 @@ def get_updated_movie_info(movie_id) -> dict | list:
             }
 
 
-@movies_bp.route('/users/<int:user_id>/update_movie/<int:movie_id>', methods=['GET', 'POST'])
-def update_movie(user_id: int, movie_id: int):
+@movies_bp.route('/movies/update_movie/<int:movie_id>', methods=['GET', 'POST'])
+def update_movie(movie_id: int):
     """
     -Render update_movie form
     to update a movie
-    for a given user id
-    -Redirect to user_movies page
+    -Redirect to movies page
     after update
-    :param user_id: int
     :param movie_id: int
     :return:
         GET: render update_movie.html | movie not found error message
-        POST: redirect to user_movies page | bad request error message
+        POST: redirect to movies page | bad request error message
     """
-    user = g.users_data_manager.get_user(user_id)
     movie = g.movies_data_manager.get_movie(movie_id)
 
-    if movie is None or user is None:
+    if movie is None:
         abort(404)
 
     if request.method == 'POST':
         updated_movie = get_updated_movie_info(movie_id)
         if isinstance(updated_movie, list):
             return render_template('update_movie.html',
-                                   user=user,
                                    movie=movie,
                                    error_messages=updated_movie)
 
         if g.movies_data_manager.update_movie(updated_movie) is None:
             abort(400, ['No such movie'])
-        return redirect(url_for('users.get_user', user_id=user_id))
+        return redirect(url_for('movies.get_movies'))
 
-    return render_template('update_movie.html', user=user, movie=movie)
+    return render_template('update_movie.html', movie=movie)
 
 
-@movies_bp.route('/users/<int:user_id>/delete_movie/<int:movie_id>')
-def delete_movie(user_id: int, movie_id: int):
+@movies_bp.route('/movies/delete_movie/<int:movie_id>')
+def delete_movie(movie_id: int):
     """
-    Delete a specific movie from a given movie id
-    :param user_id: int
+    Delete a specific movie given movie_id
     :param movie_id: int
     :return:
-        redirect to user_movies page |
+        redirect to movies page |
         movie not found error message
     """
     if g.movies_data_manager.delete_movie(movie_id) is None:
+        movies = g.movies_data_manager.get_movies()
+        return render_template('movies.html',
+                               movies=movies,
+                               error_message='Unable to delete this movie as it was favourited.')
+
+    return redirect(url_for('movies.get_movies'))
+
+
+@movies_bp.route('/users/<int:user_id>/movie_reviews/<int:movie_id>', methods=['GET'])
+def get_movie_reviews(user_id: int, movie_id: int):
+    user = g.users_data_manager.get_user(user_id)
+    if user is None:
         abort(404)
 
-    return redirect(url_for('users.get_user', user_id=user_id))
+    movie = g.movies_data_manager.get_movie(movie_id)
+    movie_reviews = g.movies_reviews_data_manager.get_movie_reviews()
+    return render_template('movie_reviews.html', user=user, movie_reviews=movie_reviews, movie=movie)
+
+
+@movies_bp.route('/users/<int:user_id>/add_movie_review/<int:movie_id>', methods=['POST'])
+def add_movie_review(user_id: int, movie_id: int):
+    if request.method == 'POST':
+        reviewed_info = {
+            'user_id': user_id,
+            'movie_id': movie_id,
+            'rating': request.form.get('rating'),
+            'review_text': request.form.get('review_text')
+        }
+
+        if g.movies_reviews_data_manager.add_movie_review(reviewed_info) is None:
+            abort(404, ['Cannot review this movie.'])
+        return redirect(url_for('movies.get_movie_reviews', movie_id=movie_id, user_id=user_id))

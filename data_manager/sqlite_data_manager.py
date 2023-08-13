@@ -32,7 +32,9 @@ class SQLiteDataManager(DataManagerInterface, ABC):
         """
         try:
             return self._entity.query.all()
-        except SQLAlchemyError:
+        except SQLAlchemyError as err:
+            print(err)
+            self.db.session.rollback()
             return None
 
     def get_item_by_id(self, item_id):
@@ -48,6 +50,7 @@ class SQLiteDataManager(DataManagerInterface, ABC):
                 filter(getattr(self._entity, self._id_key) == item_id). \
                 one()
         except SQLAlchemyError:
+            self.db.session.rollback()
             return None
 
     def add_item(self, new_item) -> bool | None:
@@ -95,7 +98,8 @@ class SQLiteDataManager(DataManagerInterface, ABC):
                     setattr(item, key, value)
                 self.db.session.commit()
                 return True
-        except SQLAlchemyError:
+        except SQLAlchemyError as err:
+            print(err)
             self.db.session.rollback()
             return None
 

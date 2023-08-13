@@ -9,41 +9,63 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
   <div class="movie">
     <header>
         <h1><img src="/static/images/logo.png" alt="logo"></h1>
         <h1>Movieflix</h1>
-        <h2>{{ user.name }}'s Favourite Movies</h2>
+        <h2>{{ user.user_name }}'s Favourite Movies</h2>
         <a href="/">Home</a> |
-        <a href="/users">Users</a> |
-        <a href="/users/{{ user.id }}/add_movie">Add Movie</a>
+        <a href="/users">Users</a>
         <br>
         <br>
     </header>
     <main>
       <ol class="movie-grid">
-      {% if user and user.movies %}
-          {% for movie in user.movies %}
-            <li>
-                <div class="movie1">
-                    <a href="{{ movie.website }}">
-                        <img class="movie-poster" src="{{ movie.poster }}" title="{{ movie.name }}"/>
-                    </a>
-                    <div class="movie-title">{{ movie.name }}</div>
-                    <div class="movie-year">{{ movie.director }}</div>
-                    <div class="movie-year">{{ movie.year }}</div>
-                    <div class="movie-year">{{ movie.rating }}</div>
-                      <div class="movie-title">
-                          <a href="/users/{{ user.id }}/update_movie/{{ movie.id }}">Update</a>
-                          |
-                          <a href="/users/{{ user.id }}/delete_movie/{{ movie.id }}">Delete</a>
+          {% if movies %}
+              {% for movie in user.movies %}
+              <li class="movie1">
+                  <div class="movie1">
+                      <a href="{{ movie.website }}">
+                            <img class="movie-poster" src="{{ movie.poster }}" title="{{ movie.movie_name }}"/>
+                        </a>
+                        <div class="movie-title">{{ movie.movie_name }}</div>
+                        <div class="movie-year">{{ movie.director }}</div>
+                        <div class="movie-year">{{ movie.year }}</div>
+                        <div class="movie-year">{{ movie.rating }}</div>
+                        <div class="movie-title">
+                            <a href="/users/{{ user.id }}/delete_user_movie/{{ movie.user_movie_id }}">Remove Favourite</a>
+                            <a href="/users/{{ user.id }}/movie_reviews/{{ movie.id }}">Review</a>
+                        </div>
+                  </div>
+              </li>
+            {% endfor %}
+            </ol>
+        <br>
+        <br>
+        <hr>
+        <h2>Add movie to your favourite list.</h2>
+        <hr>
+            <ol class="movie-grid">
+                {% for movie in movies %}
+                  <li class="movie1">
+                      <div class="movie1">
+                          <a href="{{ movie.website }}">
+                                <img class="movie-poster" src="{{ movie.poster }}" title="{{ movie.movie_name }}"/>
+                            </a>
+                            <div class="movie-title">{{ movie.movie_name }}</div>
+                            <div class="movie-year">{{ movie.director }}</div>
+                            <div class="movie-year">{{ movie.year }}</div>
+                            <div class="movie-year">{{ movie.rating }}</div>
+                            <div class="movie-title">
+                                <a href="/users/{{ user.id }}/add_user_movie/{{ movie.id }}">Favourite</a>
+                            </div>
                       </div>
-                </div>
-            </li>
-          {% endfor %}
-      {% endif %}
+                  </li>
+                {% endfor %}
+          {% endif %}
       </ol>
     </main>
   </div>

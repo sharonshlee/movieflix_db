@@ -25,7 +25,7 @@ def list_users():
 
 
 @users_bp.route('/users/<int:user_id>', methods=['GET'])
-def get_user(user_id: int):
+def get_user_movies(user_id: int):
     """
     Get user given user id
     :param
@@ -37,10 +37,20 @@ def get_user(user_id: int):
     """
     user = g.users_data_manager.get_user(user_id)
 
+    movies = g.movies_data_manager.get_movies()
+    un_favourite_movies = []
+    ids = []
+    for user_movie in user['movies']:
+        ids.append(user_movie['id'])
+    for movie in movies:
+        if movie['id'] not in ids:
+            un_favourite_movies.append(movie)
+
     if user is None:
         abort(404)
     return render_template('user_movies.html',
-                           user=user)
+                           user=user,
+                           movies=un_favourite_movies)
 
 
 def validate_user_input(user_info: dict) -> list:
@@ -162,3 +172,41 @@ def delete_user(user_id: int):
         abort(404)
 
     return redirect(url_for('users.list_users'))
+
+
+@users_bp.route('/users/<int:user_id>/add_user_movie/<int:movie_id>')
+def add_user_movie(user_id: int, movie_id: int):
+    """
+    Add a specific user's fav movie
+    given user_id and movie id
+    :param user_id: int
+    :param movie_id: int
+    :return:
+        redirect to user_movies page |
+        movie not found error message
+    """
+    user_movie_info = {
+        'user_id': user_id,
+        'movie_id': movie_id
+    }
+    if g.users_movies_data_manager.add_user_movie(user_movie_info) is None:
+        abort(404)
+
+    return redirect(url_for('users.get_user_movies', user_id=user_id))
+
+
+@users_bp.route('/users/<int:user_id>/delete_user_movie/<int:user_movie_id>')
+def delete_user_movie(user_id: int, user_movie_id: int):
+    """
+    Delete a specific user's fav movie
+    given user_id and movie id
+    :param user_movie_id: int
+    :param user_id: int
+    :return:
+        redirect to user_movies page |
+        movie not found error message
+    """
+    if g.users_movies_data_manager.delete_user_movie(user_movie_id) is None:
+        abort(404)
+
+    return redirect(url_for('users.get_user_movies', user_id=user_id))

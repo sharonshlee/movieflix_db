@@ -9,9 +9,11 @@ import os
 from flask import Flask, render_template, g
 from flask_cors import CORS
 
-from movieflix_db.data_manager.data_models import User, Movie, db
+from movieflix_db.data_manager.data_models import User, Movie, UserMovie, MovieReview, db
 from movieflix_db.data_manager.users import Users
 from movieflix_db.data_manager.movies import Movies
+from movieflix_db.data_manager.users_movies import UsersMovies
+from movieflix_db.data_manager.movies_reviews import MoviesReviews
 from movieflix_db.data_manager.sqlite_data_manager import SQLiteDataManager
 from users_routes import users_bp
 from movies_routes import movies_bp
@@ -28,7 +30,8 @@ with app.app_context():
 
 users_data_manager = Users(SQLiteDataManager('id', User, db))
 movies_data_manager = Movies(SQLiteDataManager('id', Movie, db))
-
+users_movies_data_manager = UsersMovies(SQLiteDataManager('id', UserMovie, db))
+movies_reviews_data_manager = MoviesReviews(SQLiteDataManager('id', MovieReview, db))
 
 app.register_blueprint(users_bp)
 app.register_blueprint(movies_bp)
@@ -40,6 +43,8 @@ CORS(app)
 def before_request():
     g.users_data_manager = users_data_manager
     g.movies_data_manager = movies_data_manager
+    g.users_movies_data_manager = users_movies_data_manager
+    g.movies_reviews_data_manager = movies_reviews_data_manager
 
 
 @app.route('/')

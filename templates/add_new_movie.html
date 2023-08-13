@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Update User - Movieflix</title>
+    <title>Add New Movie - Movieflix</title>
     <link rel="icon" href="/static/images/logo.png" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <!--Google fonts    -->
@@ -16,23 +16,24 @@
         <header>
             <h1><img src="/static/images/logo.png" alt="logo"></h1>
             <h1>Movieflix</h1>
-            <h2>Users</h2>
+            <h2>Movies</h2>
             <a href="/">Home</a> |
-            <a href="/users">Users</a>
+            <a href="/users">Users</a> |
+            <a href="/movies">Movies</a>
             <br>
             <br>
         </header>
         <main>
-            <h3>Update User</h3>
-            <form action="{{ url_for('users.update_user', user_id=user.id) }}" method="POST">
+            <h3>Add New Movie</h3>
+            <form action="{{ url_for('movies.add_new_movie') }}" method="POST">
                 <table>
                     <tr>
-                        <td>Name:</td>
-                        <td><input type="text" name="name" id="name" value="{{ user.user_name }}"></td>
+                        <td>Movie Name:</td>
+                        <td><input type="text" name="movie_name" id="movie_name"></td>
                     </tr>
                     <tr>
                         <td></td>
-                        <td><input type="submit" name="submit_button" value="Update User"
+                        <td><input type="submit" name="submit_button" value="Add Movie"
                                    class="btn btn-outline-secondary btn-sm"></td>
                     </tr>
                 </table>

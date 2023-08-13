@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
   <div class="movie">
@@ -17,6 +18,7 @@
       <h1>Movieflix</h1>
       <h2>Users</h2>
       <a href="/">Home</a> |
+      <a href="/movies">Movies</a> |
       <a href="/add_user">Add User</a>
       <br>
       <br>
@@ -26,7 +28,7 @@
           <ol class="movie-grid">
           {% for user in users %}
             <li>
-              <a href="/users/{{ user.id }}">{{ user.name }}</a>
+              <a href="/users/{{ user.id }}">{{ user.user_name }}</a>
                 <div class="movie-title">
                     <a href="/users/{{ user.id }}/update_user">Update</a>
                     |

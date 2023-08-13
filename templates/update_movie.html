@@ -9,22 +9,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
     <div class="movie">
         <header>
             <h1><img src="/static/images/logo.png" alt="logo"></h1>
             <h1>Movieflix</h1>
-            <h2>{{ user.name }}'s Favourite Movies</h2>
+            <h2>Movies</h2>
             <a href="/">Home</a> |
             <a href="/users">Users</a> |
-            <a href="/users/{{ user.id }}">Movies</a>
+            <a href="/movies">Movies</a>
             <br>
             <br>
         </header>
         <main>
             <h3>Update Movie</h3>
-            <form action="{{ url_for('movies.update_movie', user_id=user.id, movie_id=movie.id) }}" method="POST">
+            <form action="{{ url_for('movies.update_movie', movie_id=movie.id) }}" method="POST">
                 <table>
                     <tr>
                         <td>Name:</td>
@@ -44,7 +46,8 @@
                     </tr>
                     <tr>
                         <td></td>
-                        <td><input type="submit" name="submit_button" value="Update Movie"></td>
+                        <td><input type="submit" name="submit_button" value="Update Movie"
+                                   class="btn btn-outline-secondary btn-sm"></td>
                     </tr>
                 </table>
             </form>

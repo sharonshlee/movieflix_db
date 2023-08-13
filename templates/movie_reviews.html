@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Movies - Movieflix</title>
+    <link rel="icon" href="/static/images/logo.png" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!--Google fonts    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="movie">
+    <header>
+        <h1><img src="/static/images/logo.png" alt="logo"></h1>
+        <h1>Movieflix</h1>
+        <h2>Movie Reviews</h2>
+        <a href="/">Home</a> |
+        <a href="/users">Users</a> |
+        <a href="/users/{{ user.id }}">{{ user.user_name }}</a>
+        <br>
+        <br>
+    </header>
+    <main>
+      <ol class="movie-grid">
+          <li>
+          {% if movie %}
+              <div class="movie1">
+                    <a href="{{ movie.website }}">
+                    <img class="movie-poster" src="{{ movie.poster }}" title="{{ movie.movie_name }}"/>
+                    </a>
+                    <div class="movie-title">{{ movie.movie_name }}</div>
+                    <div class="movie-year">{{ movie.director }}</div>
+                    <div class="movie-year">{{ movie.year }}</div>
+              </div>
+          {% endif %}
+          </li>
+            <li>
+              {% if movie.movie_reviews %}
+                  {% for review in movie.movie_reviews %}
+                    <div class="review">
+                        <div>{{ review.user.user_name }}</div>
+                        <div>Rating: {{ review.rating }}</div>
+                        <div class="textarea">{{ review.review_text }}</div>
+                    </div>
+                  {% endfor %}
+              {% endif %}
+            </li>
+          <li>
+             {% if user.id not in movie.movie_reviews|map(attribute="user_id") %}
+                  <div class="movie1">
+                    <form action="{{ url_for('movies.add_movie_review', user_id=user.id, movie_id=movie.id) }}" method="POST">
+                        <table>
+                            <tr>
+                                <td><label for="rating">Rating:</label></td>
+                                <td>
+                                    <select id="rating" name="rating" style="width:100%">
+                                      <option value="0">0</option>
+                                      <option value="1">1</option>
+                                      <option value="2">2</option>
+                                      <option value="3">3</option>
+                                      <option value="5">5</option>
+                                      <option value="6">6</option>
+                                      <option value="7">7</option>
+                                      <option value="8">8</option>
+                                      <option value="9">9</option>
+                                      <option value="10">10</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Review Comment:</td>
+                                <td>
+                                    <textarea id="review_text" name="review_text" rows="5" cols="25"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><input type="submit" name="submit_button" value="Add Review"
+                                           class="btn btn-outline-secondary btn-sm"></td>
+                            </tr>
+                        </table>
+                    </form>
+                  </div>
+              {% endif %}
+           </li>
+      </ol>
+    </main>
+  </div>
+</body>
+</html>
