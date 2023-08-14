@@ -35,7 +35,7 @@ Movies:
 - POST /api/movies: Add a new movie.
 - PATCH /api/movies/update_movie/<int:movie_id>: Update a movie.
 - DELETE /api/movies/delete_movie/<int:movie_id>: Delete a movie.
-- GET /movies/<int:movie_id>/reviews: List all movie reviews for a movie
+- GET /api/movies/<int:movie_id>/reviews: List all movie reviews for a movie
 - POST /users/<int:user_id>/add_movie_review/<int:movie_id>: Add a movie review for a movie
 
 
