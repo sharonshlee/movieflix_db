@@ -65,23 +65,3 @@ class MoviesReviews:
             None
         """
         return self._data_manager.add_item(self.__instantiate_new_movie(new_movie_review))
-
-    # def update_movie(self, updated_movie: dict):
-    #     """
-    #     Update a movie info
-    #     :param updated_movie: dict
-    #     :return:
-    #         True for success update movie (bool) |
-    #         None
-    #     """
-    #     return self._data_manager.update_item(updated_movie)
-    #
-    # def delete_movie(self, movie_id: int) -> bool | None:
-    #     """
-    #     Delete a movie given movie_id
-    #     :param movie_id: int
-    #     :return:
-    #         True for success delete movie (bool) |
-    #         None
-    #     """
-    #     return self._data_manager.delete_item(movie_id)

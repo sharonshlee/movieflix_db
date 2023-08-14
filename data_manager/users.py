@@ -23,19 +23,20 @@ class Users:
         Convert user from db object to dict format
         """
         movies = []
-        for user_movie in user.movies:
-            movies.append(
-                {
-                    "user_movie_id": user_movie.id,
-                    "id": user_movie.movie.id,
-                    "movie_name": user_movie.movie.movie_name,
-                    "director": user_movie.movie.director,
-                    "year": user_movie.movie.year,
-                    "rating": user_movie.movie.rating,
-                    "poster": user_movie.movie.poster,
-                    "website": user_movie.movie.website
-                }
-            )
+        if user.movies:
+            for user_movie in user.movies:
+                movies.append(
+                    {
+                        "user_movie_id": user_movie.id,
+                        "id": user_movie.movie.id,
+                        "movie_name": user_movie.movie.movie_name,
+                        "director": user_movie.movie.director,
+                        "year": user_movie.movie.year,
+                        "rating": user_movie.movie.rating,
+                        "poster": user_movie.movie.poster,
+                        "website": user_movie.movie.website
+                    }
+                )
         return {"id": user.id,
                 "user_name": user.user_name,
                 "movies": movies}
@@ -64,6 +65,8 @@ class Users:
             None
         """
         user = self._data_manager.get_item_by_id(user_id)
+        if user is None:
+            return None
         return self.__user_to_dict(user)
 
     @staticmethod

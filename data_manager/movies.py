@@ -17,19 +17,32 @@ class Movies:
     def __init__(self, data_manager: DataManagerInterface):
         self._data_manager = data_manager
 
-
     @staticmethod
     def __movie_to_dict(movie) -> dict:
         """
         Convert movie from db object to dict format
         """
+        movie_reviews = []
+        if movie.movie_reviews:
+            for review in movie.movie_reviews:
+                movie_reviews.append({
+                    "id": review.id,
+                    "user_id": review.user_id,
+                    "movie_id": review.movie_id,
+                    "review_text": review.review_text,
+                    "rating": review.rating,
+                    "user": {"user_id": review.user.id,
+                             "user_name": review.user.user_name }
+                })
+
         return {"id": movie.id,
                 "movie_name": movie.movie_name,
                 "director": movie.director,
                 "year": movie.year,
                 "rating": movie.rating,
                 "poster": movie.poster,
-                "website": movie.website
+                "website": movie.website,
+                "movie_reviews": movie_reviews
                 }
 
     def get_movies(self) -> List[dict] | None:
@@ -56,7 +69,10 @@ class Movies:
             Movie (dict) |
             None
         """
-        return self._data_manager.get_item_by_id(movie_id)
+        movie = self._data_manager.get_item_by_id(movie_id)
+        if not movie:
+            return None
+        return self.__movie_to_dict(movie)
 
     @staticmethod
     def __instantiate_new_movie(new_movie_info):

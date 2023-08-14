@@ -54,6 +54,16 @@ class UsersMovies:
             users.append(self.__user_to_dict(user))
         return users
 
+    def get_user_movie(self, user_movie_id: int):
+        """
+        Return a specific user movie given user_movie_id
+        :param user_movie_id: int
+        :return:
+            UserMovie (dict) |
+            None
+        """
+        return self._data_manager.get_item_by_id(user_movie_id)
+
     @staticmethod
     def __instantiate_user_movie(fav_movie_info):
         return UserMovie(

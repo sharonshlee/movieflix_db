@@ -169,41 +169,6 @@ def add_new_movie():
     return render_template('add_new_movie.html')
 
 
-@movies_bp.route('/users/<int:user_id>/add_movie', methods=['GET', 'POST'])
-def add_user_movie(user_id: int):
-    """
-    Render add_movie form to add movie
-    for a given user id
-    Redirect to user_movies page
-    after adding a new user
-    :param user_id: int
-    :return:
-        GET: render add_movie page
-        POST:
-            redirect to user_movies page |
-            user not found error message
-    """
-    user = g.users_data_manager.get_user(user_id)
-    if user is None:
-        abort(404)
-
-    if request.method == 'POST':
-        new_movie_info = get_new_movie_info()
-        if isinstance(new_movie_info, list):
-            return render_template('add_movie.html',
-                                   user=user,
-                                   error_messages=new_movie_info)
-
-        if g.movies_data_manager.add_user_movie(user_id, new_movie_info) is None:
-            return render_template('add_movie.html',
-                                   user=user,
-                                   error_messages=[])
-
-        return redirect(url_for('users.get_user', user_id=user_id))
-
-    return render_template('add_movie.html', user=user)
-
-
 def isfloat(number: str) -> bool:
     """
     Check if the given number is float type
